@@ -1,8 +1,6 @@
 package com.nextyu.mall.web.interceptor;
 
 import com.nextyu.mall.context.UserContext;
-import com.nextyu.mall.context.UserInfo;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;

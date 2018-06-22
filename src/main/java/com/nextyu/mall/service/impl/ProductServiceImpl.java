@@ -1,5 +1,6 @@
 package com.nextyu.mall.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.nextyu.mall.dao.ProductDetailMapper;
@@ -14,14 +15,12 @@ import com.nextyu.mall.service.UploadService;
 import com.nextyu.mall.vo.ProductDetailVO;
 import com.nextyu.mall.vo.ProductListVO;
 import com.nextyu.mall.vo.ProductVO;
-import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
@@ -72,7 +71,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         String subImages = product.getSubImages();
-        if (StringUtils.isNotEmpty(subImages)) {
+        if (StrUtil.isNotEmpty(subImages)) {
             List<String> images = new ArrayList<>();
             String[] strings = subImages.split(",");
             for (String string : strings) {
@@ -137,7 +136,7 @@ public class ProductServiceImpl implements ProductService {
 
     private SearchQuery getProductSearchQuery(ProductQuery query) {
         QueryBuilder queryBuilder = null;
-        if (StringUtils.isNotEmpty(query.getKeywords())) {
+        if (StrUtil.isNotEmpty(query.getKeywords())) {
 //            queryBuilder = QueryBuilders.queryStringQuery(query.getKeywords());
             queryBuilder = QueryBuilders.matchPhraseQuery("title", query.getKeywords());
 //            queryBuilder = QueryBuilders.matchQuery("categoryId", 1026);
