@@ -36,8 +36,8 @@ public class Swagger2Config {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("summer mall api")
-                .description("http://www.nextyu.com/")
-                .termsOfServiceUrl("http://www.nextyu.com/")
+                .description("http://blog.nextyu.com/")
+                .termsOfServiceUrl("http://blog.nextyu.com/")
                 .contact(new Contact("皂白", "", ""))
                 .version("1.0")
                 .build();

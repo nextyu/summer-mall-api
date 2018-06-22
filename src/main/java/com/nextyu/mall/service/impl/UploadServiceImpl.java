@@ -8,8 +8,7 @@ import com.qiniu.http.Response;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +17,10 @@ import org.springframework.stereotype.Service;
  *
  * @author nextyu
  */
+@Slf4j
 @Service
 public class UploadServiceImpl implements UploadService {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private MallProperties mallProperties;
@@ -41,7 +40,7 @@ public class UploadServiceImpl implements UploadService {
             return putRet;
         } catch (QiniuException ex) {
 //            Response response = ex.response;
-            logger.error("upload img to qiniu error", ex);
+            log.error("upload img to qiniu error", ex);
         }
         return null;
     }

@@ -15,10 +15,9 @@ import com.nextyu.mall.service.UploadService;
 import com.nextyu.mall.vo.ProductDetailVO;
 import com.nextyu.mall.vo.ProductListVO;
 import com.nextyu.mall.vo.ProductVO;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -31,10 +30,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     @Autowired
     private ProductMapper productMapper;
@@ -55,7 +54,7 @@ public class ProductServiceImpl implements ProductService {
         Optional<Product> optionalProduct = productRepository.findById(id);
         Product one = optionalProduct.get();
 
-        LOGGER.debug("from es {}", one);
+        log.debug("from es {}", one);
 
 
         Product product = productMapper.selectByPrimaryKey(id);
@@ -122,7 +121,7 @@ public class ProductServiceImpl implements ProductService {
 
 
         List<Product> products = productRepository.search(searchQuery).getContent();
-        LOGGER.debug("from es {}", products);
+        log.debug("from es {}", products);
         List<ProductListVO> productVOS = new ArrayList<>(products.size());
         for (Product product : products) {
             ProductListVO productListVO = new ProductListVO();
@@ -154,7 +153,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         // 分页参数
-        Pageable pageable = new PageRequest(query.getPageNum(), query.getPageSize(), ProductSortEnum.getSort(query.getSort()));
+        Pageable pageable = PageRequest.of(query.getPageNum(), query.getPageSize(), ProductSortEnum.getSort(query.getSort()));
         return new NativeSearchQueryBuilder()
                 .withPageable(pageable)
                 .withQuery(queryBuilder)
