@@ -17,7 +17,7 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
+    /*@RequestMapping(value = "", method = RequestMethod.POST)
     public Object save(OrderVO orderVO) {
         Boolean isSuccess = orderService.save(orderVO);
         return new Object();
@@ -45,5 +45,5 @@ public class OrderController {
     public Object listAll() {
         List<OrderVO> orderVOS = orderService.listAll();
         return new Object();
-    }
+    }*/
 }

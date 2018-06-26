@@ -17,7 +17,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
+    /*@RequestMapping(value = "", method = RequestMethod.POST)
     public Object save(UserVO userVO) {
         Boolean isSuccess = userService.save(userVO);
         return new Object();
@@ -45,5 +45,5 @@ public class UserController {
     public Object listAll() {
         List<UserVO> userVOS = userService.listAll();
         return new Object();
-    }
+    }*/
 }

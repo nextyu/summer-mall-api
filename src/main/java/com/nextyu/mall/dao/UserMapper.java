@@ -1,7 +1,9 @@
 package com.nextyu.mall.dao;
 
 import com.nextyu.mall.entity.User;
+import org.apache.ibatis.annotations.Mapper;
 
+@Mapper
 public interface UserMapper {
     int deleteByPrimaryKey(Long id);
 
