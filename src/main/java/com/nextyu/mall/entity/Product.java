@@ -7,10 +7,9 @@ import java.io.Serializable;
 
 @Document(indexName = "product", type = "product")
 @Data
-public class Product implements Serializable{
+public class Product implements Serializable {
 
-    private static final long serialVersionUID = -1L;
-
+    private static final long serialVersionUID = -3228141866442325218L;
     /**
      * id
      */
@@ -45,6 +44,16 @@ public class Product implements Serializable{
      * 简介
      */
     private String summary;
+
+    /**
+     * 地址
+     */
+    private String address;
+
+    /**
+     * 营业时间
+     */
+    private String hours;
 
     /**
      * 主图

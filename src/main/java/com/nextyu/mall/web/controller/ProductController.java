@@ -37,7 +37,7 @@ public class ProductController extends BaseController {
             @ApiImplicitParam(name = "pageSize", value = "每页显示数量", required = true,
                     dataType = "int", defaultValue = "10", paramType = SwaggerParamTypeConstants.QUERY),
             @ApiImplicitParam(name = "categoryId", value = "类目id", required = false,
-                    dataType = "long", defaultValue = "1026", paramType = SwaggerParamTypeConstants.QUERY)
+                    dataType = "long", defaultValue = "5", paramType = SwaggerParamTypeConstants.QUERY)
     })
     @GetMapping()
     public Object listPage(@ApiIgnore ProductQuery query) {

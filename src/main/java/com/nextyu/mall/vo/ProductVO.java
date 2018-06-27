@@ -19,6 +19,18 @@ public class ProductVO {
     @ApiModelProperty(value = "标题")
     private String title;
 
+    /**
+     * 地址
+     */
+    @ApiModelProperty(value = "地址")
+    private String address;
+
+    /**
+     * 营业时间
+     */
+    @ApiModelProperty(value = "营业时间")
+    private String hours;
+
 
     /**
      * 原价

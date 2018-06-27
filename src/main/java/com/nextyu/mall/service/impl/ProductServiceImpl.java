@@ -3,6 +3,7 @@ package com.nextyu.mall.service.impl;
 import cn.hutool.core.util.StrUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.nextyu.mall.constant.RedisConstants;
 import com.nextyu.mall.dao.ProductDetailMapper;
 import com.nextyu.mall.dao.ProductMapper;
 import com.nextyu.mall.entity.Product;
@@ -24,6 +25,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -47,26 +49,29 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+
 
     @Override
     public ProductDetailVO getById(Long id) {
 
         Optional<Product> optionalProduct = productRepository.findById(id);
-        Product one = optionalProduct.get();
-
-        log.debug("from es {}", one);
-
-
-        Product product = productMapper.selectByPrimaryKey(id);
-        if (null == product) {
+        if (!optionalProduct.isPresent()) {
             return null;
         }
+        Product product = optionalProduct.get();
+
+        log.debug("from es {}", product);
+
+
         ProductDetailVO productDetailVO = new ProductDetailVO();
         BeanUtils.copyProperties(product, productDetailVO);
 
-        ProductDetail productDetail = productDetailMapper.getByProductId(id);
-        if (null != productDetail) {
-            productDetailVO.setDetail(productDetail.getDetail());
+
+        Object detail = redisTemplate.opsForValue().get(RedisConstants.PRODUCT_PREFIX + id);
+        if (null != detail) {
+            productDetailVO.setDetail(detail.toString());
         }
 
         String subImages = product.getSubImages();
@@ -108,18 +113,6 @@ public class ProductServiceImpl implements ProductService {
         // 构建搜索查询
         SearchQuery searchQuery = getProductSearchQuery(query);
 
-        /*Pageable pageable = new PageRequest(query.getPageNum(), query.getPageSize());
-
-        List<Product> byTitle = productRepository.findByTitle(query.getKeywords());
-        System.out.println("*******" + byTitle);
-
-        Page<Product> page = productRepository.search(QueryBuilders.matchPhraseQuery("title", query.getKeywords()), pageable);
-        System.out.println("++++" + page.getContent());
-        Page<Product> page2 = productRepository.search(QueryBuilders.queryStringQuery(query.getKeywords()), pageable);
-        System.out.println("&&&&&&" + page2.getContent());
-        Iterable<Product> title1 = productRepository.search(QueryBuilders.matchPhraseQuery("title", query.getKeywords()));*/
-
-
         List<Product> products = productRepository.search(searchQuery).getContent();
         log.debug("from es {}", products);
         List<ProductListVO> productVOS = new ArrayList<>(products.size());
@@ -136,17 +129,13 @@ public class ProductServiceImpl implements ProductService {
     private SearchQuery getProductSearchQuery(ProductQuery query) {
         QueryBuilder queryBuilder = null;
         if (StrUtil.isNotEmpty(query.getKeywords())) {
-//            queryBuilder = QueryBuilders.queryStringQuery(query.getKeywords());
             queryBuilder = QueryBuilders.matchPhraseQuery("title", query.getKeywords());
-//            queryBuilder = QueryBuilders.matchQuery("categoryId", 1026);
-//            queryBuilder = QueryBuilders.multiMatchQuery(query.getKeywords(), "title");
         }
 
         QueryBuilder categoryQueryBuilder = null;
         if (null != query.getCategoryId()) {
             categoryQueryBuilder = QueryBuilders.matchQuery("categoryId", query.getCategoryId());
         }
-
 
         if (query.getPageNum() >= 1) {
             query.setPageNum(query.getPageNum() - 1);
