@@ -18,4 +18,6 @@ public interface UserService {
     List<UserVO> listPage(UserQuery query);
 
     PageInfo<UserVO> getPageInfo(UserQuery query);
+
+    UserVO signUp(String phone, String password);
 }

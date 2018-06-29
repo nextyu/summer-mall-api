@@ -6,6 +6,7 @@ import com.nextyu.mall.dao.UserMapper;
 import com.nextyu.mall.entity.User;
 import com.nextyu.mall.query.UserQuery;
 import com.nextyu.mall.service.UserService;
+import com.nextyu.mall.util.DateTimeUtil;
 import com.nextyu.mall.vo.UserVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,5 +58,19 @@ public class UserServiceImpl implements UserService {
         PageHelper.startPage(query.getPageNum(), query.getPageSize());
         List<UserVO> userVOS = null;
         return new PageInfo<>(userVOS);
+    }
+
+    @Override
+    public UserVO signUp(String phone, String password) {
+        User user = new User();
+        user.setPhone(phone);
+        user.setPassword(password);
+        user.setCreateTime(DateTimeUtil.currentTimeMillis());
+
+        int rows = userMapper.insertSelective(user);
+
+        UserVO userVO = new UserVO();
+        userVO.setId(user.getId());
+        return userVO;
     }
 }
