@@ -7,7 +7,6 @@ import com.nextyu.mall.constant.RedisConstants;
 import com.nextyu.mall.dao.ProductDetailMapper;
 import com.nextyu.mall.dao.ProductMapper;
 import com.nextyu.mall.entity.Product;
-import com.nextyu.mall.entity.ProductDetail;
 import com.nextyu.mall.enums.ProductSortEnum;
 import com.nextyu.mall.query.ProductQuery;
 import com.nextyu.mall.repository.ProductRepository;
@@ -19,6 +18,10 @@ import com.nextyu.mall.vo.ProductVO;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.script.Script;
+import org.elasticsearch.search.sort.ScriptSortBuilder;
+import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -111,7 +114,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductListVO> search(ProductQuery query) {
         // 构建搜索查询
-        SearchQuery searchQuery = getProductSearchQuery(query);
+        SearchQuery searchQuery = initProductSearchQuery(query);
 
         List<Product> products = productRepository.search(searchQuery).getContent();
         log.debug("from es {}", products);
@@ -126,7 +129,7 @@ public class ProductServiceImpl implements ProductService {
         return productVOS;
     }
 
-    private SearchQuery getProductSearchQuery(ProductQuery query) {
+    private SearchQuery initProductSearchQuery(ProductQuery query) {
         QueryBuilder queryBuilder = null;
         if (StrUtil.isNotEmpty(query.getKeywords())) {
             queryBuilder = QueryBuilders.matchPhraseQuery("title", query.getKeywords());
@@ -141,12 +144,16 @@ public class ProductServiceImpl implements ProductService {
             query.setPageNum(query.getPageNum() - 1);
         }
 
+        ScriptSortBuilder scriptSortBuilder = SortBuilders.scriptSort(new Script("Math.random()"), ScriptSortBuilder.ScriptSortType.NUMBER).order(SortOrder.ASC);
+
+
         // 分页参数
         Pageable pageable = PageRequest.of(query.getPageNum(), query.getPageSize(), ProductSortEnum.getSort(query.getSort()));
         return new NativeSearchQueryBuilder()
                 .withPageable(pageable)
                 .withQuery(queryBuilder)
                 .withFilter(categoryQueryBuilder)
+                .withSort(scriptSortBuilder)
                 .build();
     }
 

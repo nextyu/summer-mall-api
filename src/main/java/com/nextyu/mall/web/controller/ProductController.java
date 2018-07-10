@@ -44,19 +44,25 @@ public class ProductController extends BaseController {
         return ServiceResponse.buildOk(productService.listPage(query));
     }
 
-    @ApiOperation(value = "搜索产品列表", notes = "搜索产品列表", response = ProductListVO.class, responseContainer = "List")
+    @ApiOperation(value = "搜索产品列表，每次随机返回两条数据", notes = "搜索产品列表", response = ProductListVO.class, responseContainer = "List")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "pageNum", value = "页码", required = true,
+            @ApiImplicitParam(name = "categoryId", value = "类目id", required = false,
+                    dataType = "long", defaultValue = "5", paramType = SwaggerParamTypeConstants.QUERY),
+            @ApiImplicitParam(name = "keywords", value = "关键词", required = false,
+                    dataType = "string", defaultValue = "糕点", paramType = SwaggerParamTypeConstants.QUERY)
+            /*@ApiImplicitParam(name = "pageNum", value = "页码", required = true,
                     dataType = "int", defaultValue = "1", paramType = SwaggerParamTypeConstants.QUERY),
             @ApiImplicitParam(name = "pageSize", value = "每页显示数量", required = true,
                     dataType = "int", defaultValue = "10", paramType = SwaggerParamTypeConstants.QUERY),
             @ApiImplicitParam(name = "keywords", value = "关键词", required = false,
                     dataType = "string", defaultValue = "糕点", paramType = SwaggerParamTypeConstants.QUERY),
             @ApiImplicitParam(name = "sort", value = "排序,1:综合排序,2:价格从小到大排序,3:价格从大到小排序,4:销量从小到大排序,5:销量从大到小排序", required = true,
-                    dataType = "int", defaultValue = "1", paramType = SwaggerParamTypeConstants.QUERY)
+                    dataType = "int", defaultValue = "1", paramType = SwaggerParamTypeConstants.QUERY)*/
     })
     @GetMapping("/search")
     public Object search(@ApiIgnore ProductQuery query) {
+        query.setPageNum(1);
+        query.setPageSize(2);
         List<ProductListVO> productListVOS = productService.search(query);
         return ServiceResponse.buildOk(productListVOS);
     }
