@@ -27,7 +27,7 @@ public class UserContext {
 
     public static void remove() {
         if (get() != null) {
-            LOGGER.debug("remove user from ThreadLocal : {}", get().getToken());
+            LOGGER.debug("remove user from ThreadLocal : {}", get().getUserId());
             current.remove();
         }
     }

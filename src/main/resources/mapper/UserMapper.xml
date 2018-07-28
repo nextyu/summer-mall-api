@@ -125,4 +125,11 @@
       version = version + 1
     where id = #{id,jdbcType=BIGINT}  and version = #{version}
   </update>
+
+  <!--##################-->
+  <select id="getByPhone" resultType="com.nextyu.mall.entity.User">
+    select <include refid="Base_Column_List"/> from user where phone = #{phone}
+  </select>
+
+
 </mapper>

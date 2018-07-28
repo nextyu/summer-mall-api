@@ -45,7 +45,7 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into order
+    insert into `order`
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="userId != null">
         user_id,
@@ -161,4 +161,20 @@
       version = version + 1
     where id = #{id,jdbcType=BIGINT}  and version = #{version}
   </update>
+
+  <!--############-->
+  <select id="list" resultType="com.nextyu.mall.vo.OrderVO">
+    select
+      o.id,
+      o.product_name,
+      o.total_price,
+      o.create_time,
+      o.order_status,
+      p.main_image product_image
+    from `order` o inner join product p on o.product_id = p.id
+    where o.user_id = #{userId}
+    order by o.create_time desc
+  </select>
+
+
 </mapper>

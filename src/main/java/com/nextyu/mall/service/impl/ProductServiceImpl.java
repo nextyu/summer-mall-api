@@ -144,16 +144,18 @@ public class ProductServiceImpl implements ProductService {
             query.setPageNum(query.getPageNum() - 1);
         }
 
+        // 随机排序
         ScriptSortBuilder scriptSortBuilder = SortBuilders.scriptSort(new Script("Math.random()"), ScriptSortBuilder.ScriptSortType.NUMBER).order(SortOrder.ASC);
 
 
         // 分页参数
-        Pageable pageable = PageRequest.of(query.getPageNum(), query.getPageSize(), ProductSortEnum.getSort(query.getSort()));
+//        Pageable pageable = PageRequest.of(query.getPageNum(), query.getPageSize(), ProductSortEnum.getSort(query.getSort()));
+        Pageable pageable = PageRequest.of(0,2);
         return new NativeSearchQueryBuilder()
-                .withPageable(pageable)
                 .withQuery(queryBuilder)
                 .withFilter(categoryQueryBuilder)
                 .withSort(scriptSortBuilder)
+                .withPageable(pageable)
                 .build();
     }
 

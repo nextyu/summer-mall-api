@@ -4,6 +4,12 @@ import lombok.Data;
 
 @Data
 public class OrderVO {
+
+    private String orderStatusStr;
+    private String productImage;
+    private String orderTime;
+    private String totalPriceYuan;
+
     /**
      * 
      */

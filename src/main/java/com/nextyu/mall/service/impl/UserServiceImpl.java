@@ -7,15 +7,21 @@ import com.nextyu.mall.entity.User;
 import com.nextyu.mall.query.UserQuery;
 import com.nextyu.mall.service.UserService;
 import com.nextyu.mall.util.DateTimeUtil;
+import com.nextyu.mall.util.JWTUtil;
 import com.nextyu.mall.vo.UserVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
     private UserMapper userMapper;
 
@@ -64,13 +70,31 @@ public class UserServiceImpl implements UserService {
     public UserVO signUp(String phone, String password) {
         User user = new User();
         user.setPhone(phone);
-        user.setPassword(password);
+        user.setPassword(passwordEncoder.encode(password));
         user.setCreateTime(DateTimeUtil.currentTimeMillis());
 
         int rows = userMapper.insertSelective(user);
+        if (rows <= 0) {
+            return null;
+        }
 
         UserVO userVO = new UserVO();
         userVO.setId(user.getId());
+        return userVO;
+    }
+
+    @Override
+    public UserVO signIn(String phone, String password) {
+        User user = userMapper.getByPhone(phone);
+        if (user == null) {
+            return null;
+        }
+        if (!user.getPassword().equals(passwordEncoder.encode(password))) {
+            return null;
+        }
+        String token = JWTUtil.getToken(user.getId());
+        UserVO userVO = new UserVO();
+        userVO.setToken(token);
         return userVO;
     }
 }

@@ -20,4 +20,6 @@ public interface UserService {
     PageInfo<UserVO> getPageInfo(UserQuery query);
 
     UserVO signUp(String phone, String password);
+
+    UserVO signIn(String phone, String password);
 }

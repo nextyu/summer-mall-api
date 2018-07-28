@@ -1,6 +1,8 @@
 spring:
   application:
     name: summer-mall-admin
+  jackson:
+    default-property-inclusion: non_null
   freemarker:
     suffix: .html
   datasource:
@@ -17,7 +19,7 @@ spring:
   data:
     elasticsearch:
       cluster-nodes: elasticsearch-server:9300
-      cluster-name: elasticsearch
+      cluster-name: my_elasticsearch
       repositories:
         enabled: true
   redis:

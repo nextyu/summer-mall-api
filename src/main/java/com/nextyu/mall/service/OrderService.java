@@ -18,4 +18,7 @@ public interface OrderService {
     List<OrderVO> listPage(OrderQuery query);
 
     PageInfo<OrderVO> getPageInfo(OrderQuery query);
+
+    OrderVO order(Long productId);
+
 }

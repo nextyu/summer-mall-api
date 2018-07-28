@@ -30,7 +30,7 @@ public class ProductController extends BaseController {
     private ProductService productService;
 
 
-    @ApiOperation(value = "产品列表", notes = "产品列表", response = ProductListVO.class, responseContainer = "List")
+    /*@ApiOperation(value = "产品列表", notes = "产品列表", response = ProductListVO.class, responseContainer = "List")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNum", value = "页码", required = true,
                     dataType = "int", defaultValue = "1", paramType = SwaggerParamTypeConstants.QUERY),
@@ -42,7 +42,7 @@ public class ProductController extends BaseController {
     @GetMapping()
     public Object listPage(@ApiIgnore ProductQuery query) {
         return ServiceResponse.buildOk(productService.listPage(query));
-    }
+    }*/
 
     @ApiOperation(value = "搜索产品列表，每次随机返回两条数据", notes = "搜索产品列表", response = ProductListVO.class, responseContainer = "List")
     @ApiImplicitParams({

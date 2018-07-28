@@ -11,5 +11,5 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class UserInfo {
-    private String token;
+    private Long userId;
 }

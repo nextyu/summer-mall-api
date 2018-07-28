@@ -1,6 +1,7 @@
 package com.nextyu.mall.web.interceptor;
 
 import com.nextyu.mall.context.UserContext;
+import com.nextyu.mall.context.UserInfo;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ public class UserInfoInterceptor extends HandlerInterceptorAdapter {
             return false;
         }
         UserContext.set(new UserInfo(token));*/
+        UserContext.set(new UserInfo(1L));
         return true;
     }
 
